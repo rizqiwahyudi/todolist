@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('v_index');
+// });
+
+Route::get('/',     [PagesController::class, 'index'])->name('pages.home');
+Route::get('/about',     [PagesController::class, 'about'])->name('pages.about');
