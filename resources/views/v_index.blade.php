@@ -1,6 +1,6 @@
-@extends('layouts.v_main')
+@extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Index')
 
 @section('content')
 <div class="starter-template">
