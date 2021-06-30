@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Index')
+@section('title', 'Home')
 
 @section('content')
 <div class="starter-template">
