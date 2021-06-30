@@ -34,6 +34,7 @@ or You can make the seed with the following command :
 php artisan migrate --seed
 ```
 
+> **NOTE : Make sure the web server and database are turned on before migration command**
 ### And Lastly, Run the server
 ```
 php artisan serve
