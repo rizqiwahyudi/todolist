@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Todolist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TodolistsController extends Controller
 {
@@ -31,7 +32,7 @@ class TodolistsController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.v_create-todo');
     }
 
     /**
@@ -42,7 +43,24 @@ class TodolistsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date'],
+            'progress' => ['required', 'max:100'],
+            'comment' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect("/dashboard/create-todo")
+                            ->withErrors($validator)
+                            ->withInput();
+        }
+
+        $datas = $request->all();
+        $datas['created_by'] = Auth::user()->email;
+        Todolist::create($datas);
+        return redirect("/dashboard")->with('success', 'Data berhasil ditambahkan!');
     }
 
     /**

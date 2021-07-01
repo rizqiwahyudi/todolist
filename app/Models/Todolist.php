@@ -14,6 +14,7 @@ class Todolist extends Model
         'start_date',
         'end_date',
         'progress',
+        'comment',
         'created_by',
         'updated_by',
         'deleted_by',

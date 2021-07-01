@@ -20,3 +20,5 @@ Route::get('/about', [App\Http\Controllers\PagesController::class, 'about'])->na
 
 Auth::routes();
 Route::get('/dashboard', [App\Http\Controllers\TodolistsController::class, 'index'])->name('dashboard');
+Route::get('/dashboard/create-todo', [App\Http\Controllers\TodolistsController::class, 'create'])->name('create-todo');
+Route::post('/dashboard/create-todo', [App\Http\Controllers\TodolistsController::class, 'store'])->name('create-todo.store');
