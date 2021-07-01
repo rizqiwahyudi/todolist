@@ -19,4 +19,4 @@ Route::get('/', [App\Http\Controllers\PagesController::class, 'index'])->name('h
 Route::get('/about', [App\Http\Controllers\PagesController::class, 'about'])->name('about');
 
 Auth::routes();
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\TodolistsController::class, 'index'])->name('dashboard');
