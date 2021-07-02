@@ -7,7 +7,7 @@ use App\Models\Todolist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class TodolistsController extends Controller
+class TodolistController extends Controller
 {
 
     public function __construct()
@@ -71,9 +71,8 @@ class TodolistsController extends Controller
      */
     public function show(Todolist $todolist)
     {
-        $data = Todolist::find($todolist)->first();
-        // dd($data);
-        return view('dashboard.v_detail-todo', compact('data'));
+        
+        return view('dashboard.v_detail-todo', compact('todolist'));
     }
 
     /**
@@ -84,7 +83,7 @@ class TodolistsController extends Controller
      */
     public function edit(Todolist $todolist)
     {
-        
+        return view('dashboard.v_edit-todo', compact('todolist'));
     }
 
     /**
@@ -96,7 +95,33 @@ class TodolistsController extends Controller
      */
     public function update(Request $request, Todolist $todolist)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date'],
+            'progress' => ['required', 'max:100'],
+            'comment' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect("/dashboard/create-todo/$request->id")
+                            ->withErrors($validator)
+                            ->withInput();
+        }
+
+        $todolist->name = $request->name;
+        $todolist->start_date = $request->start_date;
+        $todolist->end_date = $request->end_date;
+        $todolist->progress = $request->progress;
+        $todolist->comment = $request->comment;
+        $todolist->updated_by = Auth::user()->email;
+        $todolist->save();
+
+        if ($todolist) {
+            return redirect('/dashboard')->with(['success' => 'Data Berhasil Diupdate!']);
+        } else {
+            return redirect('/dashboard')->with(['error' => 'Data Gagal Diupdate!']);
+        }
     }
 
     /**
@@ -107,6 +132,12 @@ class TodolistsController extends Controller
      */
     public function destroy(Todolist $todolist)
     {
-        //
+        $todolist->delete();
+
+        if ($todolist) {
+            return redirect('/dashboard')->with(['success' => 'Data Berhasil Dihapus!']);
+        } else {
+            return redirect('/dashboard')->with(['error' => 'Data Gagal Dihapus!']);
+        }
     }
 }
