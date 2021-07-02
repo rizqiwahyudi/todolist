@@ -30,10 +30,10 @@
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h6><i class="fas fa-check"></i><b> Success  {{session('success')}}</b></h6>
+                        <h6><i class="fas fa-check"></i><b> Success  {{session('delete')}}</b></h6>
                     </div>
                     @endif
-                    
+
                     <a href="{{route('create-todo')}}" class="btn btn-outline-success">Create Todolist</a>
                     <a href="" class="btn btn-outline-danger">Tong Sampah</a>
                     <div class="table">
@@ -60,7 +60,7 @@
                                     <td><progress value="{{$list->progress}}" max="100"></progress> {{$list->progress}}%</td>
                                     <td>{{$list->created_by}}</td>
                                     <td>{{$list->updated_by}}</td>
-                                    <td><a href="" class="btn btn-sm btn-outline-warning">Detail</a> <a href="" class="btn btn-sm btn-outline-primary">Edit</a> <a href="" class="btn btn-sm btn-outline-danger">Delete</a></td>
+                                    <td><a href="{{route('detail-todo', [$list->id])}}" class="btn btn-sm btn-outline-warning">Detail</a> <a href="" class="btn btn-sm btn-outline-primary">Edit</a> <a href="" class="btn btn-sm btn-outline-danger">Delete</a></td>
                                 </tr>
                                 @endforeach
                             </tbody>

@@ -71,7 +71,9 @@ class TodolistsController extends Controller
      */
     public function show(Todolist $todolist)
     {
-        //
+        $data = Todolist::find($todolist)->first();
+        // dd($data);
+        return view('dashboard.v_detail-todo', compact('data'));
     }
 
     /**
@@ -82,7 +84,7 @@ class TodolistsController extends Controller
      */
     public function edit(Todolist $todolist)
     {
-        //
+        
     }
 
     /**

@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
+// Route::get('/detail', function () {
+//     return view('dashboard.v_detail-todo');
 // });
 Route::get('/', [App\Http\Controllers\PagesController::class, 'index'])->name('home');
 Route::get('/about', [App\Http\Controllers\PagesController::class, 'about'])->name('about');
@@ -22,3 +22,4 @@ Auth::routes();
 Route::get('/dashboard', [App\Http\Controllers\TodolistsController::class, 'index'])->name('dashboard');
 Route::get('/dashboard/create-todo', [App\Http\Controllers\TodolistsController::class, 'create'])->name('create-todo');
 Route::post('/dashboard/create-todo', [App\Http\Controllers\TodolistsController::class, 'store'])->name('create-todo.store');
+Route::get('/dashboard/detail-todo/{todolist}', [App\Http\Controllers\TodolistsController::class, 'show'])->name('detail-todo');
