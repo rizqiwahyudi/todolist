@@ -132,12 +132,66 @@ class TodolistController extends Controller
      */
     public function destroy(Todolist $todolist)
     {
+        $todolist->deleted_by = Auth::user()->email;
+        $todolist->save();
+
+
         $todolist->delete();
 
         if ($todolist) {
-            return redirect('/dashboard')->with(['success' => 'Data Berhasil Dihapus!']);
+            return redirect('/dashboard')->with(['success' => 'Data Berhasil Dihapus Sementara!']);
         } else {
             return redirect('/dashboard')->with(['error' => 'Data Gagal Dihapus!']);
+        }
+    }
+
+    public function getDeleteTodos()
+    {
+        $lists = Todolist::where('user_id', Auth::user()->id)->onlyTrashed()->get();
+        return view('dashboard.v_tong-sampah', compact('lists'));
+    }
+
+    public function restore($id){
+        $todolist = Todolist::onlyTrashed()->where('id', $id);
+        $todolist->restore();
+
+        if ($todolist) {
+            return redirect('/dashboard')->with(['success' => 'Data Berhasil Direstore!']);
+        } else {
+            return redirect('/dashboard')->with(['error' => 'Data Gagal Direstore!']);
+        }
+    }
+
+    public function restoreAll(){
+        $todos = Todolist::where('user_id', Auth::user()->id)->onlyTrashed();
+        $todos->restore();
+
+        if ($todos) {
+            return redirect('/dashboard')->with(['success' => ' Semua Data Berhasil Direstore!']);
+        } else {
+            return redirect('/dashboard')->with(['error' => 'Data Gagal Direstore!']);
+        }
+    }
+
+    public function deletePermanent($id){
+        $todolist = Todolist::onlyTrashed()->where('id', $id);
+        $todolist->forceDelete();
+
+        if ($todolist) {
+            return redirect('/dashboard/trash')->with(['success' => 'Data Berhasil Dihapus Permanen!']);
+        } else {
+            return redirect('/dashboard/trash')->with(['error' => 'Data Gagal Dihapus!']);
+        }   
+    }
+
+    public function deleteAll(){
+        $todos = Todolist::where('user_id', Auth::user()->id)->onlyTrashed();
+        $todos->forceDelete();
+
+        if ($todos) {
+            return redirect('/dashboard/trash')->with(['success' => 'Semua Data Berhasil Dihapus Permanen!']);
+        } else {
+            return redirect('/dashboard/trash')->with(['error' => 'Data Gagal Dihapus!']);
         }
     }
 }
