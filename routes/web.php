@@ -42,6 +42,6 @@ Route::get('/dashboard/edit-todo/{todolist}', 		[App\Http\Controllers\TodolistCo
 				->name('edit-todo');
 Route::put('/dashboard/edit-todo/{todolist}', 		[App\Http\Controllers\TodolistController::class, 'update'])
 				->name('update-todo');
-Route::get('/dashboard/trash/restore/{id}',	[App\Http\Controllers\TodolistController::class, 'restore'])
+Route::get('/dashboard/trash/restore/{id}',			[App\Http\Controllers\TodolistController::class, 'restore'])
 				->name('trash.restore');
-Route::get('/dashboard/trash/delete/{id}', 	[App\Http\Controllers\TodolistController::class, 'deletePermanent'])		->name('trash.deletePermanent');
+Route::get('/dashboard/trash/delete/{id}', 			[App\Http\Controllers\TodolistController::class, 'deletePermanent'])		  ->name('trash.deletePermanent');

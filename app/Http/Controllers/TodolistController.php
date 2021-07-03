@@ -21,7 +21,7 @@ class TodolistController extends Controller
      */
     public function index()
     {
-        $lists = Todolist::where('user_id', Auth::user()->id)->get();
+        $lists = Todolist::where('user_id', Auth::user()->id)->paginate(5);
         return view('dashboard.v_index', compact('lists'));
     }
 
@@ -147,7 +147,7 @@ class TodolistController extends Controller
 
     public function getDeleteTodos()
     {
-        $lists = Todolist::where('user_id', Auth::user()->id)->onlyTrashed()->get();
+        $lists = Todolist::where('user_id', Auth::user()->id)->onlyTrashed()->paginate(5);
         return view('dashboard.v_tong-sampah', compact('lists'));
     }
 
