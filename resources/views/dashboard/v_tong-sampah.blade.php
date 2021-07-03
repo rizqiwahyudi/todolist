@@ -45,6 +45,8 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Start Date</th>
                                     <th scope="col">Progress</th>
+                                    <th scope="col">Deleted By</th>
+                                    <th scope="col">Deleted At</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -55,6 +57,8 @@
                                     <td>{{$list->name}}</td>
                                     <td>{{$list->start_date}}</td>
                                     <td><progress value="{{$list->progress}}" max="100"></progress></td>
+                                    <td>{{$list->deleted_by}}</td>
+                                    <td>{{$list->deleted_at}}</td>
                                     <td><a href="{{route('trash.restore', [$list->id])}}" class="btn btn-sm btn-outline-primary">Restore</a> <a href="{{route('trash.deletePermanent', [$list->id])}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda Yakin Delete Permanen ?');">Delete</a></td>
                                 </tr>
                                 @endforeach
