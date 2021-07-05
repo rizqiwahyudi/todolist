@@ -35,7 +35,7 @@ Route::get('/dashboard/create-todo', 				[App\Http\Controllers\TodolistControlle
 Route::post('/dashboard/create-todo',				[App\Http\Controllers\TodolistController::class, 'store'])
 				->name('create-todo.store');
 Route::get('/dashboard/detail-todo/{todolist}', 	[App\Http\Controllers\TodolistController::class, 'show'])
-				->name('detail-todo');
+				->name('detail-todo')->middleware('patchIdor');
 Route::get('/dashboard/delete-todo/{todolist}', 	[App\Http\Controllers\TodolistController::class, 'destroy'])
 				->name('delete-todo');
 Route::get('/dashboard/edit-todo/{todolist}', 		[App\Http\Controllers\TodolistController::class, 'edit'])
