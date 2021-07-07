@@ -44,11 +44,11 @@ class TodolistController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'name'       => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
-            'progress' => ['required', 'max:100'],
-            'comment' => ['required'],
+            'end_date'   => ['required', 'date'],
+            'progress'   => ['required', 'max:100'],
+            'comment'    => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -71,8 +71,11 @@ class TodolistController extends Controller
      */
     public function show(Todolist $todolist)
     {
-        
-        return view('dashboard.v_detail-todo', compact('todolist'));
+        if (Auth::user()->id == $todolist->user_id) {
+            return view('dashboard.v_detail-todo', compact('todolist'));
+        } else {
+            return redirect('/dashboard')->with(['error' => 'Access Denied !']);
+        }
     }
 
     /**
@@ -83,7 +86,11 @@ class TodolistController extends Controller
      */
     public function edit(Todolist $todolist)
     {
-        return view('dashboard.v_edit-todo', compact('todolist'));
+        if (Auth::user()->id == $todolist->user_id) {
+            return view('dashboard.v_edit-todo', compact('todolist'));
+        } else {
+            return redirect('/dashboard')->with(['error' => 'Access Denied !']);
+        }
     }
 
     /**
@@ -96,11 +103,11 @@ class TodolistController extends Controller
     public function update(Request $request, Todolist $todolist)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'name'       => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
-            'progress' => ['required', 'max:100'],
-            'comment' => ['required'],
+            'end_date'   => ['required', 'date'],
+            'progress'   => ['required', 'max:100'],
+            'comment'    => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -109,18 +116,14 @@ class TodolistController extends Controller
                             ->withInput();
         }
 
-        $todolist->name = $request->name;
-        $todolist->start_date = $request->start_date;
-        $todolist->end_date = $request->end_date;
-        $todolist->progress = $request->progress;
-        $todolist->comment = $request->comment;
-        $todolist->updated_by = Auth::user()->email;
-        $todolist->save();
+        if (Auth::user()->id == $todolist->user_id) {
+            $data = $request->all();
+            $data['updated_by'] = Auth::user()->email;
+            $todolist->update($data);
 
-        if ($todolist) {
-            return redirect('/dashboard')->with(['success' => 'Data Berhasil Diupdate!']);
+            return redirect('/dashboard')->with(['success'  => 'Data Berhasil Diupdate!']);
         } else {
-            return redirect('/dashboard')->with(['error' => 'Data Gagal Diupdate!']);
+            return redirect('/dashboard')->with(['error'    => 'Data Gagal Diupdate!']);
         }
     }
 
@@ -132,16 +135,18 @@ class TodolistController extends Controller
      */
     public function destroy(Todolist $todolist)
     {
-        $todolist->deleted_by = Auth::user()->email;
-        $todolist->save();
+
+        if (Auth::user()->id == $todolist->user_id) {
+            $todolist->deleted_by = Auth::user()->email;
+            $todolist->save();
 
 
-        $todolist->delete();
-
-        if ($todolist) {
-            return redirect('/dashboard')->with(['success' => 'Data Berhasil Dihapus Sementara!']);
+            $todolist->delete();
+            return redirect('/dashboard')
+                                ->with(['success'  => 'Data Berhasil Dihapus Sementara!']);
         } else {
-            return redirect('/dashboard')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect('/dashboard')
+                                ->with(['error'    => 'Data Gagal Dihapus!']);
         }
     }
 
@@ -151,47 +156,62 @@ class TodolistController extends Controller
         return view('dashboard.v_tong-sampah', compact('lists'));
     }
 
-    public function restore($id){
+    public function restore($id)
+    {
+
         $todolist = Todolist::onlyTrashed()->where('id', $id);
         $todolist->restore();
 
         if ($todolist) {
-            return redirect('/dashboard')->with(['success' => 'Data Berhasil Direstore!']);
+            return redirect('/dashboard')->with(['success'  => 'Data Berhasil Direstore!']);
         } else {
-            return redirect('/dashboard')->with(['error' => 'Data Gagal Direstore!']);
+            return redirect('/dashboard')->with(['error'    => 'Data Gagal Direstore!']);
         }
     }
 
-    public function restoreAll(){
+    public function restoreAll()
+    {
+        
         $todos = Todolist::where('user_id', Auth::user()->id)->onlyTrashed();
         $todos->restore();
 
         if ($todos) {
-            return redirect('/dashboard')->with(['success' => ' Semua Data Berhasil Direstore!']);
+            return redirect('/dashboard')
+                                ->with(['success'  => ' Semua Data Berhasil Direstore!']);
         } else {
-            return redirect('/dashboard')->with(['error' => 'Data Gagal Direstore!']);
+            return redirect('/dashboard')
+                                ->with(['error'    => 'Data Gagal Direstore!']);
         }
+            
     }
 
-    public function deletePermanent($id){
+    public function deletePermanent($id)
+    {
+        
         $todolist = Todolist::onlyTrashed()->where('id', $id);
         $todolist->forceDelete();
 
         if ($todolist) {
-            return redirect('/dashboard/trash')->with(['success' => 'Data Berhasil Dihapus Permanen!']);
+            return redirect('/dashboard/trash')
+                                ->with(['success'   => 'Data Berhasil Dihapus Permanen!']);
         } else {
-            return redirect('/dashboard/trash')->with(['error' => 'Data Gagal Dihapus!']);
-        }   
+            return redirect('/dashboard/trash')
+                                ->with(['error'     => 'Data Gagal Dihapus!']);
+        } 
     }
 
-    public function deleteAll(){
+    public function deleteAll()
+    {
+
         $todos = Todolist::where('user_id', Auth::user()->id)->onlyTrashed();
         $todos->forceDelete();
 
         if ($todos) {
-            return redirect('/dashboard/trash')->with(['success' => 'Semua Data Berhasil Dihapus Permanen!']);
+            return redirect('/dashboard/trash')
+                                ->with(['success'   => 'Semua Data Berhasil Dihapus Permanen!']);
         } else {
-            return redirect('/dashboard/trash')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect('/dashboard/trash')
+                                ->with(['error'     => 'Data Gagal Dihapus!']);
         }
     }
 }
